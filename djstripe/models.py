@@ -771,6 +771,11 @@ class Invoice(StripeInvoice):
         # RelatedManager, so this must be done as part of the post save hook.
         cls._stripe_object_to_invoice_items(target_cls=InvoiceItem, data=data, invoice=self)
 
+        # Link charge back to this invoice
+        if self.charge:
+            self.charge.invoice = self
+            self.charge.save()
+
     @classmethod
     def upcoming(cls, **kwargs):
         # Convert Customer to stripe_id
