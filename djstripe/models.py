@@ -97,8 +97,12 @@ class Charge(StripeCharge):
         refunded_charge = super(Charge, self).refund(amount, reason)
         return Charge.sync_from_stripe_data(refunded_charge)
 
-    def capture(self):
-        captured_charge = super(Charge, self).capture()
+    def capture(self, amount=None):
+        params = {}
+        if amount:
+         params = {"amount": int(amount * 100)}
+
+        captured_charge = self.api_retrieve().capture(**params)
         return Charge.sync_from_stripe_data(captured_charge)
 
     def _attach_objects_hook(self, cls, data):
