@@ -24,7 +24,7 @@ import decimal
 import sys
 
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.db import models
+from django.db import IntegrityError, models
 from django.utils import dateformat, six, timezone
 from django.utils.encoding import python_2_unicode_compatible, smart_text
 from polymorphic.models import PolymorphicModel
@@ -295,7 +295,10 @@ class StripeObject(models.Model):
         # If this happens when syncing Stripe data, it's a djstripe bug. Report it!
         assert not should_expand, "No data to create {} from {}".format(cls.__name__, field_name)
 
-        return cls._create_from_stripe_object(data, save=save), True
+        try:
+            return cls._create_from_stripe_object(data, save=save), True
+        except IntegrityError:
+            return cls.stripe_objects.get(stripe_id=stripe_id), False
 
     @classmethod
     def _stripe_object_to_customer(cls, target_cls, data):
