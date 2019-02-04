@@ -126,7 +126,11 @@ def customer_subscription_webhook_handler(event):
 
     Docs an example subscription webhook response: https://stripe.com/docs/api#subscription_object
     """
-    _handle_crud_like_event(target_cls=Subscription, event=event)
+    # XXX workaround: don't delete canceled subscriptions
+    crud_type = CrudType.determine(event=event)
+    if crud_type.deleted:
+        crud_type = CrudType(updated=True)
+    _handle_crud_like_event(target_cls=Subscription, event=event, crud_type=crud_type)
 
 
 @webhooks.handler("transfer", "charge", "coupon", "invoice", "invoiceitem", "plan")
