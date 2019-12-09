@@ -449,7 +449,7 @@ class StripeObject(models.Model):
 
 
 class StripeSource(PolymorphicModel, StripeObject):
-    customer = models.ForeignKey("Customer", on_delete=models.CASCADE, related_name="sources")
+    customer = models.ForeignKey("Customer", on_delete=models.CASCADE, related_name="sources", null=True)
 
 
 # ============================================================================ #
