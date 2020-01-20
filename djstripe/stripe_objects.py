@@ -1754,6 +1754,7 @@ Fields not implemented:
         help_text="Number of trial period days granted when subscribing a customer to this plan. "
         "Null if the plan has no trial period."
     )
+    active = StripeBooleanField(default=True)
 
     @property
     def amount_in_cents(self):
