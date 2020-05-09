@@ -1812,6 +1812,10 @@ Fields not implemented:
         "``cancel_at_period_end`` on the subscription will be true. You can use this attribute to determine whether "
         "a subscription that has a status of active is scheduled to be canceled at the end of the current period."
     )
+    cancel_at = StripeDateTimeField(
+        null=True,
+        help_text=""
+    )
     canceled_at = StripeDateTimeField(
         null=True,
         help_text="If the subscription has been canceled, the date of that cancellation. If the subscription was "
