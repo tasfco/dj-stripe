@@ -1061,11 +1061,6 @@ class Subscription(StripeSubscription):
         return Subscription.sync_from_stripe_data(stripe_subscription)
 
     def cancel(self, at_period_end=djstripe_settings.CANCELLATION_AT_PERIOD_END):
-        # If plan has trial days and customer cancels before trial period ends, then end subscription now,
-        #     i.e. at_period_end=False
-        if self.trial_end and self.trial_end > timezone.now():
-            at_period_end = False
-
         stripe_subscription = super(Subscription, self).cancel(at_period_end=at_period_end)
         return Subscription.sync_from_stripe_data(stripe_subscription)
 
